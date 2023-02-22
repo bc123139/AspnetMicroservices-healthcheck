@@ -23,7 +23,7 @@ services:
       - POSTGRES_DB=DiscountDb
     restart: always
     ports:
-        - "5432:5432"
+      - "5432:5432" #1st port is local one
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
@@ -55,7 +55,7 @@ services:
       - pgadmin_data:/root/.pgadmin
 
   portainer:
-    container_name: portainer
+    container_name: portainer #username:admin password:admin1234567
     restart: always
     ports:
       - "8080:8000"
@@ -158,3 +158,24 @@ services:
       - ordering.api
     ports:
       - "8006:80"
+
+  elasticsearch:
+    container_name: elasticsearch
+    environment:
+        - xpack.monitoring.enabled=true
+        - xpack.watcher.enabled=false
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - discovery.type=single-node
+    ports:
+        - "9200:9200"
+    volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data
+
+  kibana:
+    container_name: kibana
+    environment:
+        - ELASTICSEARCH_URL=http://elasticsearch:9200
+    depends_on:
+        - elasticsearch
+    ports:
+        - "5601:5601"
