@@ -189,6 +189,7 @@ services:
         - "5601:5601"
 
   webstatus:
+    container_name: webstatus
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - HealthChecksUI__HealthChecks__0__Name=Catalog Health Check
